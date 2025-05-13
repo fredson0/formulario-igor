@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Fale Conosco</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f9f9f9;
+      margin: 0;
+      padding: 0;
+    }
+
+    .menu {
+      background-color: #007bff;
+      padding: 15px;
+      text-align: center;
+    }
+
+    .menu a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .menu a:hover {
+      text-decoration: underline;
+    }
+
+    .secao {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #fefefe;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .secao h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .campo {
+      margin-bottom: 15px;
+    }
+
+    .campo label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    .campo input,
+    .campo textarea {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .resposta {
+      margin-top: 15px;
+      color: green;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <nav class="menu">
+    <a href="index.html">Início</a>
+    <a href="saber-mais.html">Saber Mais</a>
+    <a href="relatos.html">Relatos</a>
+    <a href="contato.html">Fale Conosco</a>
+  </nav>
+
+  <section class="secao">
+    <h2>Entre em Contato</h2>
+    <form id="formContato">
+      <div class="campo">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required>
+      </div>
+
+      <div class="campo">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+
+      <div class="campo">
+        <label for="mensagem">Mensagem:</label>
+        <textarea id="mensagem" name="mensagem" rows="5" required></textarea>
+      </div>
+
+      <button type="submit">Enviar</button>
+    </form>
+    <p id="respostaServidor" class="resposta"></p>
+  </section>
+
+  <script>
+    const form = document.getElementById('formContato');
+    const resposta = document.getElementById('respostaServidor');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const dados = {
+        nome: form.nome.value,
+        email: form.email.value,
+        mensagem: form.mensagem.value
+      };
+
+      try {
+        const respostaAPI = await fetch('/contato', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(dados)
+        });
+
+        const resultado = await respostaAPI.json();
+        resposta.textContent = resultado.mensagem;
+
+        form.reset();
+      } catch (erro) {
+        resposta.textContent = "Erro ao enviar. Tente novamente.";
+      }
+    });
+  </script>
+</body>
+</html>
