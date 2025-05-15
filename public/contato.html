@@ -98,6 +98,30 @@
       </div>
 
       <div class="campo">
+        <label for="dataNascimento">Data de Nascimento:</label>
+        <input type="date" id="dataNascimento" name="dataNascimento" required>
+      </div>
+
+      <div class="campo">
+        <label>Etnia (escolha pelo menos uma):</label><br>
+        <input type="checkbox" id="etniaBranca" name="etnia" value="Branca">
+        <label for="etniaBranca">Branca</label>
+        <input type="checkbox" id="etniaPreta" name="etnia" value="Preta">
+        <label for="etniaPreta">Preta</label>
+        <input type="checkbox" id="etniaParda" name="etnia" value="Parda">
+        <label for="etniaParda">Parda</label>
+        <input type="checkbox" id="etniaIndigena" name="etnia" value="Indígena">
+        <label for="etniaIndigena">Indígena</label>
+        <input type="checkbox" id="etniaAmarela" name="etnia" value="Amarela">
+        <label for="etniaAmarela">Amarela</label>
+      </div>
+
+      <div class="campo">
+        <label for="rg">RG (somente números):</label>
+        <input type="text" id="rg" name="rg" pattern="\d+" required>
+      </div>
+
+      <div class="campo">
         <label for="email">Email:</label>
         <input type="email" id="email" name="email" required>
       </div>
@@ -105,6 +129,16 @@
       <div class="campo">
         <label for="mensagem">Mensagem:</label>
         <textarea id="mensagem" name="mensagem" rows="5" required></textarea>
+      </div>
+
+      <div class="campo">
+        <label for="senha">Senha:</label>
+        <input type="password" id="senha" name="senha" required>
+      </div>
+
+      <div class="campo">
+        <label for="confirmarSenha">Confirmar Senha:</label>
+        <input type="password" id="confirmarSenha" name="confirmarSenha" required>
       </div>
 
       <button type="submit">Enviar</button>
@@ -119,10 +153,33 @@
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
+      
+      const etniasMarcadas = Array.from(document.querySelectorAll('input[name="etnia"]:checked')).map(cb => cb.value);
+      if (etniasMarcadas.length === 0) {
+        resposta.textContent = "Selecione pelo menos uma etnia.";
+        return;
+      }
+
+    
+      if (form.senha.value !== form.confirmarSenha.value) {
+        resposta.textContent = "As senhas não coincidem.";
+        return;
+      }
+
+      
+      if (!/^\d+$/.test(form.rg.value)) {
+        resposta.textContent = "O RG deve conter apenas números.";
+        return;
+      }
+
       const dados = {
         nome: form.nome.value,
+        dataNascimento: form.dataNascimento.value,
+        etnia: etniasMarcadas,
+        rg: form.rg.value,
         email: form.email.value,
-        mensagem: form.mensagem.value
+        mensagem: form.mensagem.value,
+        senha: form.senha.value
       };
 
       try {
